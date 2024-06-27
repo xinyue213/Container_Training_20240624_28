@@ -119,5 +119,8 @@ oc port-forward --help
 to set ENV variable using oc command via config map file
 oc create cm mycm --from-literal HOST=mydb.danny-dbproj.svc --from-literal NAME=testdb --from-literal PASS=redhat
 oc set env deploy/myapp --prefix DB_ --from cm/mycm
-
+to unset env variable:
+oc set env deploy/myapp DB_NAME- (<<envKey>>-)
+or just edit the cm
+oc edit cm/mycm
 
