@@ -68,6 +68,8 @@ setup the network cluster of Master node with floating IP (fail over cluster)
 download the .iso, go to each host, boot from CD room (the .iso image)
 
 
+to check cluster ongoing log
+oc get events -w
 
 
 kel-ocp.com
@@ -123,4 +125,32 @@ to unset env variable:
 oc set env deploy/myapp DB_NAME- (<<envKey>>-)
 or just edit the cm
 oc edit cm/mycm
+
+
+to retrigger build config rebuild
+oc start-build bc/myapp
+
+oc logs bc/myapp -f
+
+
+to setup persistent volum storage
+ oc set volume deploy/myapp --add --mount-path /opt/data --claim-class standard-csi --claim-size 10Mi --name myvol
+
+to make persistnce volume not writing to same volume, use statefulset
+this will make each pod having unique storage
+
+
+to check role binding inside 1 project
+oc describe rolebinding <<rolename>>
+to check clucster scoped role binding
+oc descrbe clusterrolebinding <<rolename>>
+
+
+scc policy lab testing
+ oc adm policy scc-subject-review deploy/abc
+RESOURCE        ALLOWED BY
+<unknown>/abc   anyuid
+ oc adm policy add-scc-to-user anyuid -z mysa
+this command is to update the servic account running the pod build
+ oc set serviceaccount deploy/abc mysa
 
