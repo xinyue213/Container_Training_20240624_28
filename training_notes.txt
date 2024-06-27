@@ -102,3 +102,20 @@ svc expose naming convention:
 oc expose svc myweb --name abc --hostname abc.def.ghi
 add this line C:\Windows\System32\drivers\etc\host
 34.142.169.1 abc.def.ghi
+
+
+in kubernetes rout called Ingress
+
+
+to browse shared image stream from internet
+oc get is -n openshift
+
+in case image don't provide db client in the db pod, can use oc port fowarding
+oc port-forward --help
+
+to set ENV variable using oc command via config map file
+oc create cm mycm --from-literal HOST=mydb.danny-dbproj.svc --from-literal NAME=testdb --from-literal PASS=redhat
+oc set env deploy/myapp --prefix DB_ --from cm/mycm
+
+
+
