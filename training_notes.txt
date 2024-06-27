@@ -1,0 +1,104 @@
+
+podman commit -a 'Danny' -c 'EXPOSE 80' -c 'ENTRYPOINT ["httpd"]' -c 'CMD ["-D","FOREGROUND"]' ee myweb:1.0
+
+podman run -it registry...:latest /bin/bash
+
+podman run -d -p 12345:80 -v /home/danny/website:/var/www/html myweb:1.0
+
+github.com/sclorg/
+
+
+sudo yum install -y nano
+sudo yum install -y git
+
+(nano is easier use vi)
+
+
+dockerfile keywords
+FROM
+LABEL
+
+EXPOSE
+ENV
+
+RUN
+ADD
+USER
+
+ENTRYPOINT
+
+
+podman build . -t myweb:20240625 --squash
+
+podman login quay.io
+podman push myweb:20240625 quay.io/siendut/myweb:20240625
+
+podman images -a (will show also overwritten images)
+(to delete image)
+podman rmi ee
+
+Powershell:
+wsl --shutdown (to kill wsl, occupy 800 MB of physical disk space)
+
+
+& crc oc-env | Invoke-Expression
+oc login -u kubeadmin -p sMRko-BJsQt-AxJ9H-UcuJY https://api.crc.testing:6443
+
+deployment stratey:
+1. rolling update
+2. recreate
+
+2 entry point of OpenShift Cluster:
+1. to access OpenShift Cluster API (all 3 out of 3 Master Nodes serve Cluster API)
+api.<<clusterName>>.<<domainName>>.com:6443
+2. to access Infra Node / Rout resource, need wildcard dns (2 out of 3 Master Nodes serve the Infra Node)
+*.apps.<<clustrName>>.<<domainName>>.com
+
+crc console
+
+OpenShift assisted setup ->
+1. go to OpenShift website, https://console.redhat.com/openshift/
+2. Create Cluster > DataCenter > Assisted Clusters > ...
+--download the Assisted installer cluster .iso file. vvv
+3. run the iso inside the Virtual Machine.
+4. follow the setup it will go through steps, just finish all the steps.
+minimum CPU 4 (single node need 8) core RAM 16 GB DiskSpace 100 GB 
+
+setup the network cluster of Master node with floating IP (fail over cluster)
+download the .iso, go to each host, boot from CD room (the .iso image)
+
+
+
+
+kel-ocp.com
+https://console-openshift-console.apps.cluster.kel-ocp.com/
+oc login -u danny -p redhat https://console-openshift-console.apps.cluster.kel-ocp.com/
+
+
+oc completion powershell | Out-String | Invoke-Expression
+(to enable oc <<tab>> auto completion command)
+
+oc rsh myPodName
+(to access shell terminal into the pod instance
+
+oc create -f mypod.yaml
+yaml file section configuration help:
+oc explain po
+oc explain pods.spec
+oc explain pods.spec.containers
+
+
+oc new-app [--as-deployment-config] {[--docker-image] <IMAGE>}
+
+servic (svc) naming convention internal cluster local domain
+<<svc-name>>.<<proj-name>>.svc[.cluster.local]
+oc expose svc/myweb
+oc get route
+svc expose naming convention:
+<svcName>-<projName>.apps.cluster.kel-ocp.com
+(by default it expose port 80)
+
+
+oc expose svc myweb --name abc --hostname abc.def.ghi
+add this line C:\Windows\System32\drivers\etc\host
+34.142.169.1 abc.def.ghi
