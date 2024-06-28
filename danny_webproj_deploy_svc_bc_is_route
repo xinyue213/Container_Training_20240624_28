@@ -1,0 +1,270 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "8"
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"myapp:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"myapp\")].image"}]'
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: "2024-06-27T03:44:31Z"
+    generation: 8
+    labels:
+      app: myapp
+      app.kubernetes.io/component: myapp
+      app.kubernetes.io/instance: myapp
+    name: myapp
+    namespace: danny-webproj
+    resourceVersion: "593675"
+    uid: 3c545e95-c272-4a9e-b4d9-0b41e95d0985
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        deployment: myapp
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          deployment: myapp
+      spec:
+        containers:
+        - env:
+          - name: MSG
+            value: Hello World
+          - name: VALUE1
+            value: "8888"
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: HOST
+                name: mycm
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                key: NAME
+                name: mycm
+          - name: DB_PASS
+            valueFrom:
+              configMapKeyRef:
+                key: PASS
+                name: mycm
+          - name: DB_USER
+            valueFrom:
+              configMapKeyRef:
+                key: USER
+                name: mycm
+          image: image-registry.openshift-image-registry.svc:5000/danny-webproj/myapp@sha256:871f5fa21a395d8234787d71c1bef195e2c21203c4e68fc9d8e03b7482a7bf27
+          imagePullPolicy: IfNotPresent
+          name: myapp
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /opt/data
+            name: myvol
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: myvol
+          persistentVolumeClaim:
+            claimName: pvc-ks8dr
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2024-06-27T03:44:31Z"
+      lastUpdateTime: "2024-06-27T06:37:38Z"
+      message: ReplicaSet "myapp-6bfd454cbf" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2024-06-27T06:46:21Z"
+      lastUpdateTime: "2024-06-27T06:46:21Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 8
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: "2024-06-27T03:44:31Z"
+    labels:
+      app: myapp
+      app.kubernetes.io/component: myapp
+      app.kubernetes.io/instance: myapp
+    name: myapp
+    namespace: danny-webproj
+    resourceVersion: "534658"
+    uid: 5e48a8bf-916b-44fd-9442-655040b0d16d
+  spec:
+    clusterIP: 172.30.39.69
+    clusterIPs:
+    - 172.30.39.69
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      deployment: myapp
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: "2024-06-27T03:44:31Z"
+    generation: 4
+    labels:
+      app: myapp
+      app.kubernetes.io/component: myapp
+      app.kubernetes.io/instance: myapp
+    name: myapp
+    namespace: danny-webproj
+    resourceVersion: "588696"
+    uid: 9e3a8c06-7f74-433f-bd76-77d80369f0d2
+  spec:
+    failedBuildsHistoryLimit: 5
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: myapp:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: https://github.com/kelvinlnx/myphp
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: php:7.4-ubi8
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 5
+    triggers:
+    - github:
+        secret: K4ubCSEHiJabMWrxjiKA
+      type: GitHub
+    - generic:
+        secret: eb5fKTMJD6dL3m7HmcZ-
+      type: Generic
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+  status:
+    imageChangeTriggers:
+    - from:
+        name: php:7.4-ubi8
+        namespace: openshift
+      lastTriggerTime: null
+      lastTriggeredImageID: image-registry.openshift-image-registry.svc:5000/openshift/php@sha256:3e3c0d387886d3eb1c254e54e13b277325a247981e2a9576488f3eb2e66b3d7c
+    lastVersion: 3
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: "2024-06-27T03:44:31Z"
+    generation: 1
+    labels:
+      app: myapp
+      app.kubernetes.io/component: myapp
+      app.kubernetes.io/instance: myapp
+    name: myapp
+    namespace: danny-webproj
+    resourceVersion: "590071"
+    uid: a7e48e86-5245-4dd9-ac6c-643c2d70a880
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: image-registry.openshift-image-registry.svc:5000/danny-webproj/myapp
+    tags:
+    - items:
+      - created: "2024-06-27T06:37:32Z"
+        dockerImageReference: image-registry.openshift-image-registry.svc:5000/danny-webproj/myapp@sha256:871f5fa21a395d8234787d71c1bef195e2c21203c4e68fc9d8e03b7482a7bf27
+        generation: 1
+        image: sha256:871f5fa21a395d8234787d71c1bef195e2c21203c4e68fc9d8e03b7482a7bf27
+      - created: "2024-06-27T05:54:05Z"
+        dockerImageReference: image-registry.openshift-image-registry.svc:5000/danny-webproj/myapp@sha256:0bbbac6bae6eca1bf283fa7c953ce90c85458e9348f17394612918d9e6ea0f4f
+        generation: 1
+        image: sha256:0bbbac6bae6eca1bf283fa7c953ce90c85458e9348f17394612918d9e6ea0f4f
+      - created: "2024-06-27T03:49:04Z"
+        dockerImageReference: image-registry.openshift-image-registry.svc:5000/danny-webproj/myapp@sha256:a7931f785c5374bf751025a7fcadb01b6e6eebcaaf084001a996260bda04cb2f
+        generation: 1
+        image: sha256:a7931f785c5374bf751025a7fcadb01b6e6eebcaaf084001a996260bda04cb2f
+      tag: latest
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: "2024-06-27T03:56:24Z"
+    labels:
+      app: myapp
+      app.kubernetes.io/component: myapp
+      app.kubernetes.io/instance: myapp
+    name: myapp
+    namespace: danny-webproj
+    resourceVersion: "538816"
+    uid: cee3623f-d3b2-4b49-9743-7dc0ebb92fbb
+  spec:
+    host: myapp-danny-webproj.apps.cluster.kel-ocp.com
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: myapp
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: "2024-06-27T03:56:24Z"
+        status: "True"
+        type: Admitted
+      host: myapp-danny-webproj.apps.cluster.kel-ocp.com
+      routerCanonicalHostname: router-default.apps.cluster.kel-ocp.com
+      routerName: default
+      wildcardPolicy: None
+kind: List
+metadata:
+  resourceVersion: ""
