@@ -153,3 +153,34 @@ oc adm policy add-scc-to-user anyuid -z mysa
 # this command is to update the servic account running the pod build
 oc set serviceaccount deploy/abc mysa
 
+# certificate expire 
+# download kubeconfig-aio => certificate 
+export KUBECONFIG=.kubeconfig
+# certificate sign route
+oc get csr
+oc adm certificate approve 123kds-abc543 123sda-sad233
+# after this will able to login cluster
+
+# label namespace, but will show in project also
+# oc label namespace <project name> <key>=<value>
+oc label namespace xinyue-dbproj mynetwork=database --overwrite
+# remove label
+# oc label namespace <project name> <key>-
+oc label namespace xinyue-dbproj mynetwork-
+
+# describe details
+oc describe namespace xinyue-dbproj
+oc describe project xinyue-dbproj
+
+# ingress => incoming, egress => outgoing
+
+oc get svc -o wide
+NAME   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE   SELECTOR
+mydb   ClusterIP   172.30.203.158   <none>        3306/TCP   24h   deployment=mydb
+oc get svc -o wide -n xinyue-webproj
+NAME    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE   SELECTOR
+myapp   ClusterIP   172.30.181.140   <none>        8080/TCP,8443/TCP   23h   deployment=myapp
+
+# update resource
+oc apply -f <file name>
+
