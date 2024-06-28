@@ -189,3 +189,15 @@ egress = outcoming rule
 
 
 
+Quota
+using cluster-admin
+oc create quota myquota --hard cpu=1,memory=100Mi,pods=2
+
+on the project need to setup requst on deployment resource
+ oc set resources deploy/mydb --requests cpu=100m,memory=5Mi
+ oc set resources deploy/mydb --limits cpu=500m,memory=50Mi
+oc get quota
+
+
+
+
