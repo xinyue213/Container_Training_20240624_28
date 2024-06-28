@@ -68,7 +68,7 @@ setup the network cluster of Master node with floating IP (fail over cluster)
 download the .iso, go to each host, boot from CD room (the .iso image)
 
 
-to check cluster ongoing log
+# to check cluster ongoing log
 oc get events -w
 
 
@@ -76,15 +76,14 @@ kel-ocp.com
 https://console-openshift-console.apps.cluster.kel-ocp.com/
 oc login -u danny -p redhat https://console-openshift-console.apps.cluster.kel-ocp.com/
 
-
+# to enable oc <<tab>> auto completion command
 oc completion powershell | Out-String | Invoke-Expression
-(to enable oc <<tab>> auto completion command)
 
+# to access shell terminal into the pod instance
 oc rsh myPodName
-(to access shell terminal into the pod instance
 
 oc create -f mypod.yaml
-yaml file section configuration help:
+# yaml file section configuration help:
 oc explain po
 oc explain pods.spec
 oc explain pods.spec.containers
@@ -95,8 +94,8 @@ oc api-resources | findstr secret
 
 oc new-app [--as-deployment-config] {[--docker-image] <IMAGE>}
 
-servic (svc) naming convention internal cluster local domain
-<<svc-name>>.<<proj-name>>.svc[.cluster.local]
+# servic (svc) naming convention internal cluster local domain
+# <<svc-name>>.<<proj-name>>.svc[.cluster.local]
 oc expose svc/myweb
 oc get route
 svc expose naming convention:
@@ -109,48 +108,48 @@ add this line C:\Windows\System32\drivers\etc\host
 34.142.169.1 abc.def.ghi
 
 
-in kubernetes rout called Ingress
+# in kubernetes rout called Ingress
 
 
-to browse shared image stream from internet
+# to browse shared image stream from internet
 oc get is -n openshift
 
-in case image don't provide db client in the db pod, can use oc port fowarding
+# in case image don't provide db client in the db pod, can use oc port fowarding
 oc port-forward --help
 
-to set ENV variable using oc command via config map file
+# to set ENV variable using oc command via config map file
 oc create cm mycm --from-literal HOST=mydb.danny-dbproj.svc --from-literal NAME=testdb --from-literal PASS=redhat
 oc set env deploy/myapp --prefix DB_ --from cm/mycm
-to unset env variable:
+# to unset env variable:
 oc set env deploy/myapp DB_NAME- (<<envKey>>-)
 or just edit the cm
 oc edit cm/mycm
 
 
-to retrigger build config rebuild
+# to retrigger build config rebuild
 oc start-build bc/myapp
 
 oc logs bc/myapp -f
 
 
-to setup persistent volum storage
- oc set volume deploy/myapp --add --mount-path /opt/data --claim-class standard-csi --claim-size 10Mi --name myvol
+# to setup persistent volum storage
+oc set volume deploy/myapp --add --mount-path /opt/data --claim-class standard-csi --claim-size 10Mi --name myvol
 
-to make persistnce volume not writing to same volume, use statefulset
-this will make each pod having unique storage
+# to make persistnce volume not writing to same volume, use statefulset
+# this will make each pod having unique storage
 
 
-to check role binding inside 1 project
+# to check role binding inside 1 project
 oc describe rolebinding <<rolename>>
-to check clucster scoped role binding
+# to check clucster scoped role binding
 oc descrbe clusterrolebinding <<rolename>>
 
 
-scc policy lab testing
- oc adm policy scc-subject-review deploy/abc
+# scc policy lab testing
+oc adm policy scc-subject-review deploy/abc
 RESOURCE        ALLOWED BY
 <unknown>/abc   anyuid
- oc adm policy add-scc-to-user anyuid -z mysa
-this command is to update the servic account running the pod build
- oc set serviceaccount deploy/abc mysa
+oc adm policy add-scc-to-user anyuid -z mysa
+# this command is to update the servic account running the pod build
+oc set serviceaccount deploy/abc mysa
 
