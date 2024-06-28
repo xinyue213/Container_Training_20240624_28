@@ -154,3 +154,38 @@ RESOURCE        ALLOWED BY
 this command is to update the servic account running the pod build
  oc set serviceaccount deploy/abc mysa
 
+
+
+Certificates
+login using cluster admin
+oc get csr
+oc adm certificate approve 12354-aasd234 223adf-afg23 ...
+Self Signing Operator:
+or, leave the VM on within 24 hour
+the first certificate validity is 24 hour, after first renewal 1 month, subsequently 1 year
+if VM off, need to sign the OAuth certificate manually
+in kubeconfig file (difficult)
+export KUBECONFIG=./kubeconfig
+then oc get csr
+then oc adm certificate approve ...
+
+
+
+
+Firewall
+cluster-admin need to create project Label
+ oc label namespace danny-dbproj mynetwork=database [--overwrite]
+ oc label namespace danny-webproj network=website
+in case typo
+oc label namespace danny-webproj network-
+ oc label namespace danny-webproj mynetwork=website
+
+firewall rule should be created using yaml file
+ingress = incoming rule
+egress = outcoming rule
+
+ oc apply -f .\denyall.yaml
+( oc apply same as oc create, but if already exist, it will update )
+
+
+
